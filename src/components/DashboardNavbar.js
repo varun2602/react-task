@@ -2,7 +2,7 @@ import React from "react";
 const DashboardNavbar = ({ setOpenTab }) => {
   return (
     <div className="text-white bg-[#dcdcdc12] px-10 md:px-20 p-4 ">
-      <div className="flex gap-8 justify-start">
+      <div className="flex flex-col md:flex-row gap-8 justify-start">
         <div
           className="flex gap-4 cursor-pointer "
           onClick={() => setOpenTab(1)}

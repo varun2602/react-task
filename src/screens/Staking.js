@@ -96,42 +96,72 @@ const Staking = (props) => {
 
   return (
     <div className="flex flex-col mt-7 items-start dashboard ">
-      <div className="flex stakingcard items-center text-white p-5 md:px-20 m-auto w-11/12 rounded-lg shadow-[#222223] shadow-md">
-        <div className="mr-5 w-1/2">
-          <h1 className="mb-2">
-            Register to MLM platform by buying any plan below
-          </h1>
-          <p>
-            You investment ID will be activated only after 1st puchase. Approve
-            your spendings from smart contract before proceeding.
-          </p>
-        </div>
+    
+    <div className="flex w-full p-10 md:px-20 gap-5">
+  <div className="flex stakingcard flex-col text-white gap-4 p-6 max-w-sm w-full rounded-lg shadow-[#222223] shadow-md">
+    <div className="mr-5 w-1/2">
+      <h1 className="mb-2">
+        Register to MLM platform by buying any plan below
+      </h1>
+      <p>
+        Your investment ID will be activated only after the 1st purchase. Approve your spendings from the smart contract before proceeding.
+      </p>
+    </div>
+    <div className="flex md:flex-row flex-col gap-2 items-center justify-between mt-4">
+      <div className="flex gap-4">
         <svg
-          width="2"
-          height="98"
-          viewBox="0 0 2 98"
-          fill="none"
           xmlns="http://www.w3.org/2000/svg"
+          width="18"
+          height="26"
+          viewBox="0 0 18 26"
+          fill="none"
         >
-          <line x1="1" y1="97.0026" x2="1" y2="0.997353" stroke="#0FCA87" />
+          <path
+            d="M15 16.125V13.125H17.415C17.775 14.19 18 15.21 18 16.125H15ZM14.37 7.125C13.68 6.06 12.975 5.04 12.3 4.125H12V7.125H14.37ZM15 13.125V10.125H12V13.125H15ZM15 8.145V10.125H16.11C15.75 9.465 15.39 8.79 15 8.145ZM9 19.125V16.125H12V13.125H9V10.125H12V7.125H9V4.125H12V3.72C10.35 1.515 9 0 9 0C9 0 0 10.125 0 16.125C0 21.09 4.035 25.125 9 25.125V22.125H12V19.125H9ZM12 24.6C13.125 24.21 14.13 23.625 15 22.815V22.125H12V24.6ZM12 19.125H15V16.125H12V19.125ZM15 22.125H15.69C16.5 21.255 17.085 20.25 17.475 19.125H15V22.125Z"
+            fill="#FCFCFC"
+          />
         </svg>
-
-        <div className="ml-5 flex flex-col">
-          <h1 className="mb-2"> Enter Spending</h1>
-
-          <div className="flex">
-            <input
-              class=" mr-10 shadow appearance-none border rounded w-full border-[#505352] p-3 bg-transparent leading-tight focus:outline-none focus:shadow-outline"
-              id="amount"
-              value={"10000"}
-              type="text"
-            ></input>
-            <button className="bg-[#31A16A] p-3 gap-4 flex items-center justify-center rounded-md">
-              Approve
-            </button>
-          </div>
-        </div>
+        <p>Register to MLM</p>
       </div>
+      
+    </div>
+
+    <div className="flex gap-4 flex-col mt-4">
+      <div className="mb-4">
+        <label className="block text-sm font-bold mb-2" htmlFor="amount">
+          Enter Spending
+        </label>
+        <input
+          className="shadow appearance-none border rounded w-full border-[#505352] p-3 bg-transparent leading-tight focus:outline-none focus:shadow-outline"
+          id="amount"
+          value={"10000"} // Set your initial value here
+          type="number"
+        />
+      </div>
+      <div className="bg-[#31A16A] p-3 gap-4 cursor-pointer flex items-center justify-center rounded-md">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="12"
+          height="17"
+          viewBox="0 0 12 17"
+          fill="none"
+        >
+          <path
+            d="M10 10.75V8.75H11.61C11.85 9.46 12 10.14 12 10.75H10ZM9.58 4.75C9.12 4.04 8.65 3.36 8.2 2.75H8V4.75H9.58ZM10 8.75V6.75H8V8.75H10ZM10 5.43V6.75H10.74C10.5 6.31 10.26 5.86 10 5.43ZM6 12.75V10.75H8V8.75H6V6.75H8V4.75H6V2.75H8V2.48C6.9 1.01 6 0 6 0C6 0 0 6.75 0 10.75C0 14.06 2.69 16.75 6 16.75V14.75H8V12.75H6ZM8 16.4C8.75 16.14 9.42 15.75 10 15.21V14.75H8V16.4ZM8 12.75H10V10.75H8V12.75ZM10 14.75H10.46C11 14.17 11.39 13.5 11.65 12.75H10V14.75Z"
+            fill="white"
+          />
+        </svg>{" "}
+        <p>Approve Spending</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+
+
+
       <div className="flex w-full p-10 md:px-20 gap-5">
         <div className="flex stakingcard flex-col text-white gap-4 p-6  max-w-sm w-full rounded-lg shadow-[#222223] shadow-md">
           <div className="flex md:flex-row flex-col gap-2 items-center justify-between">

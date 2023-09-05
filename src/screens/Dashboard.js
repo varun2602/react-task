@@ -76,6 +76,7 @@ const Dashboard = ({ setOpenTab }) => {
           var allreferral = await contract.showAllChild(account);
           console.log(allreferral);
           const user_tier = subscriptionDetail.tier;
+          
           setTier(user_tier);
           //console.log(user_tier.toNumber());
           var g = 0;

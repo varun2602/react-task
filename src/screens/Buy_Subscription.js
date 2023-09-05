@@ -10,7 +10,9 @@ import {
 } from "./constant/index.js";
 import "./Modal.css";
 
+
 const Buy_Subscription = (props) => {
+  let [user_tier2, set_user_tier2] = useState(0)
   const [teamsize, setTeamsize] = useState(0);
   const [address, setAddress] = useState("");
   const [directAmount, setDirectAmount] = useState(0);
@@ -19,6 +21,21 @@ const Buy_Subscription = (props) => {
   const fees = 10;
   const [approve_amount, setApproveAmount] = useState(0);
 
+  // Test contract code
+  // const provider = new ethers.providers.Web3Provider(window.ethereum);
+  // const signer = provider.getSigner();
+  // const contract = new ethers.Contract(
+  //   STAKING_CONTRACT_ADDRESS,
+  //   STAKING_ABI,
+  //   signer
+  // );
+  // const subscriptionDetail = contract.userSubscription(account);
+  // const user_tier_fetch = subscriptionDetail.tier;
+  // set_user_tier2(user_tier_fetch);
+  window.onload = async function(){
+    console.log("hey")
+  }
+  
   const { wallet } = useMetaMask();
   const [account, setAccount] = useState("");
   const [buyValue, setBuyValue] = useState(0);
@@ -39,6 +56,10 @@ const Buy_Subscription = (props) => {
         STAKING_ABI,
         signer
       );
+      const subscriptionDetail = await contract.userSubscription(account);
+      const user_tier = subscriptionDetail.tier;
+      set_user_tier2(user_tier)
+      console.log(user_tier);
       var buy_amount = 0;
       var stake_amount = 0;
       if (tier == 50) {
@@ -280,30 +301,30 @@ const Buy_Subscription = (props) => {
                   value={tier}
                   onChange={(e) => {
                     if (e.target.value == 100) {
-                      setBuyValue(85);
+                      setBuyValue(100);
                       a();
                     }
                     if (e.target.value == 200) {
-                      setBuyValue(170);
+                      setBuyValue(200);
                       a();
                     }
                     if (e.target.value == 500) {
-                      setBuyValue(475);
+                      setBuyValue(500);
                       a();
                     }
                     if (e.target.value == 1000) {
-                      setBuyValue(850);
+                      setBuyValue(1000);
                       a();
                     }
                     setTier(e.target.value);
                   }}
                   type="number"
                 >
-                  <option>50</option>
-                  <option>100</option>
-                  <option>200</option>
-                  <option>500</option>
-                  <option>1000</option>
+                  <option disabled={user_tier2 !== 0}>50</option>
+                  <option disabled={user_tier2 !== 50}>100</option>
+                  <option disabled = {user_tier2 !== 100}>200</option>
+                  <option disabled = {user_tier2 !== 200}>500</option>
+                  <option disabled = {user_tier2 !== 500}>1000</option>
                 </select>
                 <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 ">
                   <svg
