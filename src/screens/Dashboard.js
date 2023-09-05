@@ -73,11 +73,12 @@ const Dashboard = ({ setOpenTab }) => {
           console.log(user_rewards.toString()); // Log the
           setRewards((user_rewards / 1000000000000000000).toString());
           const subscriptionDetail = await contract.userSubscription(account);
+          console.log(subscriptionDetail);
           var allreferral = await contract.showAllChild(account);
           console.log(allreferral);
           const user_tier = subscriptionDetail.tier;
-          
           setTier(user_tier);
+          console.log(user_tier);
           //console.log(user_tier.toNumber());
           var g = 0;
           for (var i = 0; i < allreferral.length; i++) {
@@ -87,7 +88,7 @@ const Dashboard = ({ setOpenTab }) => {
           console.log(g);
           setGreen(g);
           const stakeAmount = subscriptionDetail.tokenAmount;
-          setPurchaseBalance(stakeAmount.toNumber());
+          setPurchaseBalance(stakeAmount.toString());
           //console.log(plan);
           //console.log(green);
           const stake_balanceInEth = ethers.utils.formatEther(stake_balance);

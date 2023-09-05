@@ -9,9 +9,8 @@ const StakingTable = (props) => {
   const [tableData, setTableData] = useState([]);
   const [planCount, setPlanCount] = useState(0);
   const [parent, setParent] = useState("");
-  const [sub_amount, setSubAmount] = useState(0)
+  const [sub_amount, setSubAmount] = useState(0);
   const [tier, setTier] = useState();
-
 
   useEffect(() => {
     if (wallet && wallet.accounts && wallet.accounts.length > 0) {
@@ -31,7 +30,7 @@ const StakingTable = (props) => {
             signer
           );
           // Fetch the number of stakes made by the user
-          
+
           const parent = await contract.getParent(account);
           //console.log(parent);
           const userStakeCount = await contract.userCount(account);
@@ -39,8 +38,8 @@ const StakingTable = (props) => {
           const user_sub = await contract.userSubscription(account);
           //setUserSub(user_sub);
           setParent(user_sub.parent);
-          setSubAmount(user_sub.tokenAmount.toNumber());
-          setTier(user_sub.tier.toNumber());
+          setSubAmount(user_sub.tokenAmount.toString());
+          setTier(user_sub.tier.toString());
           console.log(user_sub);
           // Fetch and process staking details for each stake
           const stakingDetails = [];
@@ -50,7 +49,7 @@ const StakingTable = (props) => {
             // Process the data and create an object
             const stakedAmount = ethers.utils.formatEther(user.stakedAmount); // Convert to ETH
             //console.log(stakedAmount);
-            const stakingEndTimeInSeconds = user.stakingEndTime.toNumber();
+            const stakingEndTimeInSeconds = user.stakingEndTime.toString();
             //console.log(stakingEndTimeInSeconds);
             const currentBlockTime = Math.floor(Date.now() / 1000);
             //console.log(currentBlockTime);
@@ -58,9 +57,9 @@ const StakingTable = (props) => {
             //console.log(endDateTime);
             const endDate = endDateTime.toLocaleString();
             //console.log(endDate);
-            const StartDate = user.StartDate.toNumber();
-            
-            const StartDateTime = new Date(StartDate * 1000)
+            const StartDate = user.StartDate.toString();
+
+            const StartDateTime = new Date(StartDate * 1000);
             //console.log(StartDateTime);
             const startdate = StartDateTime.toLocaleString();
             console.log(startdate);
@@ -71,7 +70,6 @@ const StakingTable = (props) => {
               )
             );
             console.log(remainingDays);
-            
 
             // Create an object with the data
             const rowData = {
@@ -86,7 +84,7 @@ const StakingTable = (props) => {
             // Add the staking details to the array
             stakingDetails.push(rowData);
           }
-          console.log(stakingDetails)
+          console.log(stakingDetails);
 
           // Update the tableData array with the new data
           setTableData(stakingDetails);
@@ -125,7 +123,7 @@ const StakingTable = (props) => {
               <th scope="col" className="px-6 py-3">
                 Parent Id
               </th>
-              
+
               <th scope="col" className="px-6 py-3">
                 Date & Time
               </th>
@@ -146,7 +144,7 @@ const StakingTable = (props) => {
                 <td className="px-6 py-4">{data.stakedAmount}</td>
                 <td className="px-6 py-4">{data.daysLeft}</td>
                 <td className="px-6 py-4">{data.parent}</td>
-                
+
                 <td className="px-6 py-4">{data.startdate}</td>
               </tr>
             ))}
@@ -172,7 +170,6 @@ const StakingTable = (props) => {
               <th scope="col" className="px-6 py-3">
                 Tier
               </th>
-    
             </tr>
           </thead>
           <tbody>
@@ -188,9 +185,8 @@ const StakingTable = (props) => {
                   {index + 1}
                 </th>
                 <td className="px-6 py-4">{sub_amount}</td>
-<td className="px-6 py-4">{parent}</td>
-<td className="px-6 py-4">{tier}</td>
-
+                <td className="px-6 py-4">{parent}</td>
+                <td className="px-6 py-4">{tier}</td>
               </tr>
             ))}
           </tbody>

@@ -10,34 +10,17 @@ import {
 } from "./constant/index.js";
 import "./Modal.css";
 
-
 const Buy_Subscription = (props) => {
-  let [user_tier2, set_user_tier2] = useState(0)
+  let [user_tier2, set_user_tier2] = useState(0);
   const [teamsize, setTeamsize] = useState(0);
   const [address, setAddress] = useState("");
   const [directAmount, setDirectAmount] = useState(0);
   const [directAddress, setDirectAddress] = useState("");
-  const [tier, setTier] = useState(0);
+  const [tier, setTier] = useState(null);
   const fees = 10;
   const [approve_amount, setApproveAmount] = useState(0);
-
-  // Test contract code
-  // const provider = new ethers.providers.Web3Provider(window.ethereum);
-  // const signer = provider.getSigner();
-  // const contract = new ethers.Contract(
-  //   STAKING_CONTRACT_ADDRESS,
-  //   STAKING_ABI,
-  //   signer
-  // );
-  // const subscriptionDetail = contract.userSubscription(account);
-  // const user_tier_fetch = subscriptionDetail.tier;
-  // set_user_tier2(user_tier_fetch);
-  window.onload = async function(){
-    console.log("hey")
-  }
-  
-  const { wallet } = useMetaMask();
   const [account, setAccount] = useState("");
+  const { wallet } = useMetaMask();
   const [buyValue, setBuyValue] = useState(0);
 
   useEffect(() => {
@@ -46,69 +29,107 @@ const Buy_Subscription = (props) => {
     }
   }, [wallet]);
 
+  useEffect(() => {
+    const getTier = async () => {
+      // console.log("hello5");
+      // console.log(account.length);
+      if (account) {
+        try {
+          console.log("hello1");
+          const provider = new ethers.providers.Web3Provider(window.ethereum);
+          const signer = provider.getSigner();
+          const contract = new ethers.Contract(
+            STAKING_CONTRACT_ADDRESS,
+            STAKING_ABI,
+            signer
+          );
+          // console.log("hello");
+          const subscriptionDetail = await contract.userSubscription(account);
+          const user_tier_fetch = subscriptionDetail.tier;
+          set_user_tier2(user_tier_fetch);
+          console.log(user_tier_fetch);
+        } catch (error) {
+          console.error("Error fetching token balance:", error);
+        }
+      }
+    };
+    getTier();
+  }, [account]);
+
   const buyToken = async (event) => {
     event.preventDefault();
     try {
-      const provider = new ethers.providers.Web3Provider(window.ethereum);
-      const signer = provider.getSigner();
-      const contract = new ethers.Contract(
-        STAKING_CONTRACT_ADDRESS,
-        STAKING_ABI,
-        signer
-      );
-      const subscriptionDetail = await contract.userSubscription(account);
-      const user_tier = subscriptionDetail.tier;
-      set_user_tier2(user_tier)
-      console.log(user_tier);
-      var buy_amount = 0;
-      var stake_amount = 0;
-      if (tier == 50) {
-        buy_amount = 42.5;
-        stake_amount = 7.5;
-      } else if (tier == 100) {
-        buy_amount = 85;
-        stake_amount = 15;
-      } else if (tier == 200) {
-        buy_amount = 170;
-        stake_amount = 30;
-      } else if (tier == 500) {
-        buy_amount = 425;
-        stake_amount = 75;
-      } else {
-        buy_amount = 850;
-        stake_amount = 150;
+      if (tier == null || tier == "none") {
+        alert("Select a tier");
       }
-      //console.log(amount);
-      const tx = await contract.buyTokens(address, buy_amount, tier, fees);
-      console.log(tx);
-      // wait for the transaction to get mined
-      await tx.wait();
-      if (tx == "false") {
-        window.alert("Buy Failed");
+      // else if (address == "") {
+      //   alert("fill the address");
+      // }
+      else {
+        const provider = new ethers.providers.Web3Provider(window.ethereum);
+        const signer = provider.getSigner();
+        const contract = new ethers.Contract(
+          STAKING_CONTRACT_ADDRESS,
+          STAKING_ABI,
+          signer
+        );
+        const subscriptionDetail = await contract.userSubscription(account);
+        const user_tier = subscriptionDetail.tier;
+        console.log(tier);
+        var buy_amount = 0;
+        var stake_amount = 0;
+        if (tier == 50) {
+          buy_amount = 42.5;
+          stake_amount = 7.5;
+        }
+        if (tier == 100) {
+          buy_amount = 85;
+          stake_amount = 15;
+        }
+        if (tier == 200) {
+          buy_amount = 170;
+          stake_amount = 30;
+        }
+        if (tier == 500) {
+          buy_amount = 425;
+          stake_amount = 75;
+        }
+        if (tier == 1000) {
+          buy_amount = 850;
+          stake_amount = 150;
+        }
+        //console.log(amount);
+        console.log(buy_amount, stake_amount);
+        const tx = await contract.buyTokens(address, buy_amount, tier, fees);
+        console.log(tx);
+        // wait for the transaction to get mined
+        await tx.wait();
+        if (tx == "false") {
+          window.alert("Buy Failed");
+        }
+        window.alert("You successfully subscribed to MJC token");
+        console.log(tx);
+        // setHash(tx.hash);
+        const userStakeCount = await contract.userCount(account);
+        const StakeCount = parseInt(userStakeCount, 16);
+        // console.log(amount, duration, teamsize);
+        console.log(StakeCount);
+        const Staking_tx = await contract.stakeTokens(
+          stake_amount,
+          180,
+          0,
+          StakeCount + 101
+        );
+        // wait for the transaction to get mined
+        await Staking_tx.wait();
+        if (Staking_tx == "false") {
+          window.alert("Staking Failed");
+        }
+        window.alert("You are Successfully Staked Your token");
+        console.log(tx);
+        // setHash(tx.hash);
+        console.log(tx.hash);
       }
-      window.alert("You successfully subscribed to MJC token");
-      //console.log(tx);
-      //setHash(tx.hash);
-
-      const userStakeCount = await contract.userCount(account);
-      const StakeCount = parseInt(userStakeCount, 16);
-      //console.log(amount, duration, teamsize);
-      //console.log(StakeCount);
-      const Staking_tx = await contract.stakeTokens(
-        stake_amount,
-        180,
-        0,
-        StakeCount + 101
-      );
-      // wait for the transaction to get mined
-      await Staking_tx.wait();
-      if (Staking_tx == "false") {
-        window.alert("Staking Failed");
-      }
-      window.alert("You are Successfully Staked Your token");
-      //console.log(tx);
-      //setHash(tx.hash);
-      console.log(tx.hash);
     } catch (error) {
       console.error(error);
     }
@@ -196,7 +217,7 @@ const Buy_Subscription = (props) => {
 
   return (
     <React.Fragment>
-      <div id="myModal" className="modal">
+      {/* <div id="myModal" className="modal">
         <div className="modal-content flex justify-between items-center bg-black text-white rounded-lg shadow-[#222223] shadow-md">
           <p>
             If you choose {tier} tier then you will have to buy for {buyValue}
@@ -205,7 +226,7 @@ const Buy_Subscription = (props) => {
             &times;
           </span>
         </div>
-      </div>
+      </div> */}
 
       <div className="flex flex-col mt-7 items-start dashboard">
         <div className="flex flex-col stakingcard items-center text-white p-5 md:px-20 m-auto w-[70%] md:w-11/12 md:flex-row rounded-lg shadow-[#222223] shadow-md">
@@ -273,12 +294,15 @@ const Buy_Subscription = (props) => {
               </button>
             </div>
             <div className="flex flex-col gap-4">
-              <div class="mb-4">
-                <label class="block  text-sm font-bold mb-2" for="username">
+              <div className="mb-4">
+                <label
+                  className="block  text-sm font-bold mb-2"
+                  htmlFor="username"
+                >
                   Enter referrer wallet address
                 </label>
                 <input
-                  class="shadow appearance-none border rounded w-full border-[#505352] p-3 bg-transparent leading-tight focus:outline-none focus:shadow-outline"
+                  className="shadow appearance-none border rounded w-full border-[#505352] p-3 bg-transparent leading-tight focus:outline-none focus:shadow-outline"
                   id="address"
                   value={address}
                   onChange={(e) => setAddress(e.target.value)}
@@ -287,48 +311,51 @@ const Buy_Subscription = (props) => {
               </div>
             </div>
 
-            <div class="w-full">
+            <div className="w-full">
               <label
-                class="block  tracking-wide  text-sm font-bold mb-2"
-                for="grid-state"
+                className="block  tracking-wide  text-sm font-bold mb-2"
+                htmlFor="grid-state"
               >
                 Buy plan
               </label>
-              <div class="relative">
-                <select
-                  class="block appearance-none w-full  bg-transparent border border-[#505352]  py-3 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-[#222223] focus:border-gray-500"
-                  id="grid-state"
-                  value={tier}
-                  onChange={(e) => {
-                    if (e.target.value == 100) {
-                      setBuyValue(100);
-                      a();
-                    }
-                    if (e.target.value == 200) {
-                      setBuyValue(200);
-                      a();
-                    }
-                    if (e.target.value == 500) {
-                      setBuyValue(500);
-                      a();
-                    }
-                    if (e.target.value == 1000) {
-                      setBuyValue(1000);
-                      a();
-                    }
-                    setTier(e.target.value);
-                  }}
-                  type="number"
-                >
-                  <option disabled={user_tier2 !== 0}>50</option>
-                  <option disabled={user_tier2 !== 50}>100</option>
-                  <option disabled = {user_tier2 !== 100}>200</option>
-                  <option disabled = {user_tier2 !== 200}>500</option>
-                  <option disabled = {user_tier2 !== 500}>1000</option>
-                </select>
-                <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 ">
+              <div className="relative">
+                {account.length > 0 && (
+                  <select
+                    className="block appearance-none w-full  bg-transparent border border-[#505352]  py-3 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-[#222223] focus:border-gray-500"
+                    id="grid-state"
+                    value={tier}
+                    onChange={(e) => {
+                      if (e.target.value == "none") {
+                        alert("please select a tier");
+                      }
+                      setTier(e.target.value);
+                    }}
+                    type="number"
+                  >
+                    <option value="none" selected>
+                      Select an Option
+                    </option>
+                    <option disabled={user_tier2 != 0} value="50">
+                      50
+                    </option>
+                    <option disabled={user_tier2 != 50} value="100">
+                      100
+                    </option>
+                    <option disabled={user_tier2 != 100} value="200">
+                      200
+                    </option>
+                    <option disabled={user_tier2 != 200} value="500">
+                      500
+                    </option>
+                    <option disabled={user_tier2 != 500} value="1000">
+                      1000
+                    </option>
+                  </select>
+                )}
+
+                <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 ">
                   <svg
-                    class="fill-current h-4 w-4"
+                    className="fill-current h-4 w-4"
                     xmlns="http://www.w3.org/2000/svg"
                     viewBox="0 0 20 20"
                   >
@@ -378,22 +405,28 @@ const Buy_Subscription = (props) => {
             <div className="flex flex-col gap-4 justify-between h-full">
               <div className="flex flex-col ">
                 <div className="mb-4">
-                  <label class="block  text-sm font-bold mb-2" for="username">
+                  <label
+                    className="block  text-sm font-bold mb-2"
+                    htmlFor="username"
+                  >
                     Enter referrer wallet address
                   </label>
                   <input
-                    class="shadow appearance-none border rounded w-full border-[#505352] p-3 bg-transparent leading-tight focus:outline-none focus:shadow-outline"
+                    className="shadow appearance-none border rounded w-full border-[#505352] p-3 bg-transparent leading-tight focus:outline-none focus:shadow-outline"
                     id="address"
                     value={directAddress}
                     onChange={(e) => setDirectAddress(e.target.value)}
                     type="text"
                   />
-                  <div class="mt-4 mb-4">
-                    <label class="block  text-sm font-bold mb-2" for="username">
+                  <div className="mt-4 mb-4">
+                    <label
+                      className="block  text-sm font-bold mb-2"
+                      htmlFor="username"
+                    >
                       Enter amount
                     </label>
                     <input
-                      class="shadow appearance-none border rounded w-full border-[#505352] p-3 bg-transparent leading-tight focus:outline-none focus:shadow-outline"
+                      className="shadow appearance-none border rounded w-full border-[#505352] p-3 bg-transparent leading-tight focus:outline-none focus:shadow-outline"
                       id="amount"
                       value={directAmount}
                       onChange={(e) => setDirectAmount(e.target.value)}
