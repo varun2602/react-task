@@ -133,11 +133,6 @@ const Dashboard = ({ setOpenTab }) => {
     getPlan(); // Call the function when the component mounts or when the account changes
   }, [account]);
 
-  const ref = (e) => {
-    e.preventDefault();
-    setReferAddress(`https://mjc.com/${account}`);
-  };
-
   return (
     <div className="flex w-full justify-center  p-10 md:px-20  md:pb-20 flex-col h-full dashboard">
       <div className="flex w-1/2 m-auto mb-3">
@@ -148,7 +143,15 @@ const Dashboard = ({ setOpenTab }) => {
           )}...${account.slice(-4)}`}</span>
         </div>
         <div className="connect-wallet md:ml-3 cursor-pointer flex  w-1/5 items-center justify-center rounded-lg text-center text-white">
-          <p onClick={ref}> Copy</p>
+          <p
+            onClick={() => {
+              navigator.clipboard.writeText(`https://mjc.com/${account}`);
+              alert("Copied to clipboard");
+            }}
+          >
+            {" "}
+            Copy
+          </p>
         </div>
       </div>
       <div className="grid gap-4 md:grid-cols-3  w-full">
