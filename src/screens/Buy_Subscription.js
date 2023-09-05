@@ -61,11 +61,9 @@ const Buy_Subscription = (props) => {
     try {
       if (tier == null || tier == "none") {
         alert("Select a tier");
-      }
-      // else if (address == "") {
-      //   alert("fill the address");
-      // }
-      else {
+      } else if (address == "") {
+        alert("fill the address");
+      } else {
         const provider = new ethers.providers.Web3Provider(window.ethereum);
         const signer = provider.getSigner();
         const contract = new ethers.Contract(
